@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  ActivityIndicator,
   AppState,
   AppStateStatus,
   Pressable,
@@ -41,7 +40,7 @@ function greetingLine(lang: Lang): string {
 export default function App() {
   const [lang, setLang] = useState<Lang>('si');
   const [now, setNow] = useState(() => Date.now());
-  const { events, loading, error, usingApi } = useNakathEvents();
+  const { events } = useNakathEvents();
   const [compassTarget, setCompassTarget] = useState<Facing | null>(null);
   const [compassOpen, setCompassOpen] = useState(false);
   const [muted, setMuted] = useState<Set<string>>(new Set());
@@ -181,17 +180,6 @@ export default function App() {
 
           <InAppBanner payload={banner} onDismiss={() => setBanner(null)} lang={lang} />
 
-          {usingApi && loading ? (
-            <ActivityIndicator style={{ marginVertical: 8 }} color="#8b4513" />
-          ) : null}
-          {error ? (
-            <Text style={styles.warn}>
-              {UI.apiErrorPrefix(lang)}
-              {error}
-              {UI.apiErrorSuffix(lang)}
-            </Text>
-          ) : null}
-
           {activeDashboard && !showFullSeettuwa ? (
             <>
               <ActiveNakathHero
@@ -321,12 +309,6 @@ const styles = StyleSheet.create({
   },
   langTxtOn: {
     color: '#fff8e7',
-  },
-  warn: {
-    color: '#b71c1c',
-    marginBottom: 8,
-    fontSize: 13,
-    textAlign: 'center',
   },
   focusHint: {
     fontSize: 12,

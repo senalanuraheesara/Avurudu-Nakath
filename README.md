@@ -3,118 +3,111 @@
 [![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?style=flat&logo=expo)](https://expo.dev/)
 [![React Native](https://img.shields.io/badge/React%20Native-0.81-61DAFB?style=flat&logo=react)](https://reactnative.dev/)
 
-**Avurudu Nakath** is a mobile app for **Sinhala & Hindu New Year** auspicious times (**nakath**) for **2026**, with all clock times in **Asia/Colombo** (UTC+05:30). It includes Sinhala, English, and Tamil, local notifications, a compass for directions, and illustrated scenes per ritual.
+**Avurudu Nakath** is a cross-platform mobile app for **Sinhala & Hindu New Year** auspicious times (**nakath**) for **2026**. All times use **Asia/Colombo** (UTC+05:30).
+
+The app is **fully offline for the schedule**: nakath data is plain TypeScript/JSON in [`mobile/src/data/nakath2026.ts`](mobile/src/data/nakath2026.ts). This project does **not** use **MongoDB**, **SQL**, or any other **server database**. There is **no backend**, **no API**, and **no `.env` required** for the app to run.
 
 | | |
 |---|---|
-| **Repository** | [github.com/senalanuraheesara/Avurudu-Nakath](https://github.com/senalanuraheesara/Avurudu-Nakath) |
-| **Mobile** | Expo (React Native) — `mobile/` |
-| **API (optional)** | Node.js + Express + MongoDB — `server/` |
+| **GitHub** | [senalanuraheesara/Avurudu-Nakath](https://github.com/senalanuraheesara/Avurudu-Nakath) |
+| **Expo slug** | `avurudu-nakath` |
+| **Code** | `mobile/` |
+| **Data** | In-app only — **no MongoDB**, no remote DB |
+
+---
+
+## Table of contents
+
+- [Features](#features)
+- [Data storage (no database server)](#data-storage-no-database-server)
+- [Tech stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Getting started](#getting-started)
+- [Android APK build](#android-apk-build)
+- [Project structure](#project-structure)
+- [Scripts](#scripts)
+- [Contributing](#contributing)
+- [Disclaimer](#disclaimer)
 
 ---
 
 ## Features
 
-- **Bundled 2026 almanac** — Full schedule in-app when offline or when no API is configured  
-- **Active nakath hero** — Highlights the ritual in progress with art and motion  
-- **Countdown** — Next upcoming nakath with a live timer  
-- **සීට්ටුව (full list)** — Scrollable list with past/upcoming state and mute per ritual  
-- **Languages** — Sinhala, English, Tamil  
-- **Notifications** — Local reminders for upcoming instants (where supported)  
-- **Compass** — Helpful for direction-facing rituals  
-- **Optional API** — Fetch events from your own backend; app falls back to bundled data on failure  
+| Area | What you get |
+|------|----------------|
+| **Almanac** | Full 2026 nakath list bundled in the app |
+| **Hero** | Large “active” nakath view with themed artwork and motion |
+| **Countdown** | Timer to the next upcoming nakath |
+| **සීට්ටුව** | Full scrollable list; completed items drop off after a short grace period |
+| **Languages** | **සිංහල**, **English**, **தமிழ்** |
+| **Notifications** | Local reminders for upcoming nakath times (where the OS allows) |
+| **Compass** | Bearing helper for rituals that specify a direction |
+| **Mute** | Per–nakath mute for notification reminders |
+
+---
+
+## Data storage (no database server)
+
+- All nakath times and copy ship **inside the app** (see `mobile/src/data/`).
+- **MongoDB is not used** and there is **no** database connection string or seed step.
+- Optional **AsyncStorage** on the device may store only small preferences (e.g. muted rituals), not a MongoDB file or cloud DB.
 
 ---
 
 ## Tech stack
 
-| Area | Stack |
-|------|--------|
-| App | [Expo](https://expo.dev/) ~54, React 19, React Native 0.81, TypeScript |
-| API | Node.js (ESM), Express, Mongoose, MongoDB |
-| Deploy (API) | Docker (`server/Dockerfile`) — e.g. AWS App Runner, ECS |
-| Android builds | [EAS Build](https://docs.expo.dev/build/introduction/) — `apk` profile in `mobile/eas.json` |
+| Layer | Details |
+|-------|---------|
+| Framework | [Expo](https://expo.dev/) SDK ~54, [React Native](https://reactnative.dev/) 0.81 |
+| UI | React 19, TypeScript |
+| Native bits | `expo-notifications`, `expo-location`, `expo-sensors`, `react-native-svg`, etc. |
+| Release builds | [EAS Build](https://docs.expo.dev/build/introduction/) — see [`mobile/eas.json`](mobile/eas.json) (`apk` profile for installable APKs) |
 
 ---
 
 ## Prerequisites
 
-- **Node.js** LTS (20.x or 22.x recommended)  
-- **npm**  
-- **MongoDB** — only if you run `server/` (local instance or [MongoDB Atlas](https://www.mongodb.com/atlas))  
-- **Expo Go** or Android/iOS emulator for development  
+- [Node.js](https://nodejs.org/) **LTS** (20.x or 22.x)
+- **npm** (bundled with Node)
+- For on-device dev: [Expo Go](https://expo.dev/go) on a phone, or Android Studio / Xcode simulators
 
 ---
 
 ## Getting started
 
-### 1. Clone the repository
-
 ```bash
 git clone https://github.com/senalanuraheesara/Avurudu-Nakath.git
-cd Avurudu-Nakath
-```
-
-### 2. Mobile app (Expo)
-
-```bash
-cd mobile
+cd Avurudu-Nakath/mobile
 npm install
 npm start
 ```
 
-- Press **`a`** for Android emulator, **`i`** for iOS simulator, or scan the QR code with **Expo Go** on a physical device.
+Then:
 
-#### Optional: remote nakath API
+- Press **`a`** — Android emulator  
+- Press **`i`** — iOS simulator (macOS + Xcode)  
+- Scan the QR code — **Expo Go** on a physical device  
 
-Create `mobile/.env` (do not commit secrets):
-
-```env
-EXPO_PUBLIC_API_URL=https://your-api-host.example.com
-```
-
-The client calls:
-
-`GET {EXPO_PUBLIC_API_URL}/api/nakath/events`
-
-If the variable is unset or the request fails, the app uses the bundled data in `mobile/src/data/nakath2026.ts`.
-
-### 3. API server (optional)
-
-```bash
-cd server
-npm install
-cp .env.example .env
-```
-
-Edit `.env` and set **`MONGODB_URI`** (and **`PORT`** if you need a port other than `4000`).
-
-```bash
-npm run seed   # optional — loads sample nakath documents into MongoDB
-npm start
-```
-
-| Endpoint | Description |
-|----------|-------------|
-| `GET /health` | Health check |
-| `GET /api/nakath/events` | JSON array of nakath events (same shape as the mobile `NakathEvent` type) |
-
-For container deployment, see **`server/Dockerfile`** and **`server/.env.example`**.
+You do **not** need MongoDB, a database server, an API URL, or any `.env` file to run or develop the app.
 
 ---
 
-## Building an Android APK (direct install)
+## Android APK build
 
-Store upload is optional. To produce an **`.apk`** for sideloading:
+To build an **`.apk`** you can share or sideload (outside Google Play):
+
+1. Install the Expo CLI for builds: `npm install -g eas-cli`
+2. Log in: `eas login`
+3. From `mobile/`:
 
 ```bash
 cd mobile
-npm install -g eas-cli
-eas login
 eas build --platform android --profile apk
 ```
 
-Download the artifact from the EAS dashboard when the build completes. Users must allow **install from unknown sources** for your chosen install method.
+4. When the build finishes, download the artifact from the [Expo dashboard](https://expo.dev/).
+
+The Android application id is **`com.avurudu.nakath`** (see [`mobile/app.json`](mobile/app.json)). End users may need to allow installation from **unknown sources** for how you distribute the file.
 
 ---
 
@@ -122,58 +115,52 @@ Download the artifact from the EAS dashboard when the build completes. Users mus
 
 ```
 Avurudu-Nakath/
-├── mobile/
-│   ├── App.tsx
-│   ├── app.json
-│   ├── eas.json
-│   ├── assets/                 # App icon, splash, ritual artwork
-│   └── src/
-│       ├── data/               # 2026 almanac + Tamil copy bundle
-│       ├── components/         # UI, hero, compass, banners
-│       ├── hooks/
-│       ├── i18n/
-│       ├── utils/              # Time, active nakath, animations
-│       └── notifications.ts
-├── server/
-│   ├── index.js
-│   ├── seed.js
-│   ├── models/
-│   ├── Dockerfile
-│   └── .env.example
+├── README.md
 ├── .gitignore
-└── README.md
+└── mobile/
+    ├── App.tsx                 # Root UI
+    ├── app.json                # Expo config (name, icons, plugins)
+    ├── eas.json                # EAS Build profiles (e.g. apk)
+    ├── index.ts
+    ├── assets/                 # Icons, splash, ritual images
+    └── src/
+        ├── data/               # nakath2026.ts — source of truth for times
+        ├── components/         # Hero, list, compass, splash, …
+        ├── hooks/              # useNakathEvents (bundled data only)
+        ├── i18n/
+        ├── utils/              # Time, active nakath, animations
+        └── notifications.ts
 ```
 
 ---
 
-## npm scripts
+## Scripts
 
-| Location | Command | Description |
-|----------|---------|-------------|
-| `mobile/` | `npm start` | Start Expo dev server |
-| `mobile/` | `npm run android` | Open on Android |
-| `mobile/` | `npm run ios` | Open on iOS |
-| `mobile/` | `npm run web` | Open in web browser |
-| `server/` | `npm start` | Start API (`PORT` default `4000`) |
-| `server/` | `npm run seed` | Seed MongoDB |
+Run these inside **`mobile/`**:
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start the Expo dev server (Metro) |
+| `npm run android` | Open in Android emulator / device |
+| `npm run ios` | Open in iOS simulator / device |
+| `npm run web` | Run in the browser (Expo web) |
 
 ---
 
 ## Contributing
 
-1. Fork the repository  
-2. Create a feature branch from `main`  
-3. Make focused commits and follow existing code style  
-4. Open a pull request  
+1. Fork the repo and create a branch from `main`.  
+2. Keep changes focused; follow existing TypeScript and React patterns.  
+3. Open a pull request with a short description of what changed.
 
 ---
 
 ## Disclaimer
 
-Nakath times are provided for **cultural and informational** purposes only. For religious or legal decisions, confirm times with your preferred official almanac or authority.
+Nakath times are for **cultural and general information** only. For religious practice or legal use, confirm with your own trusted almanac or authority.
 
 ---
 
 ## Acknowledgements
 
-Built with [Expo](https://expo.dev/) and the React Native community.
+Made with [Expo](https://expo.dev/) and the React Native community.

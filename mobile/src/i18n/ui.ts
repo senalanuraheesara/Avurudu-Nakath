@@ -15,10 +15,6 @@ export const UI = {
       `Sinhala & Hindu New Year — Nakath ${year}`,
       `சிங்கள மற்றும் இந்து புத்தாண்டு — நேர அட்டவணை ${year}`,
     ),
-  apiErrorPrefix: (lang: Lang) =>
-    tx(lang, 'සේවාදායකය සම්බන්ධ වීමට නොහැක: ', 'Could not reach API: ', 'சேவையகத்துடன் இணைக்க முடியவில்லை: '),
-  apiErrorSuffix: (lang: Lang) =>
-    tx(lang, ' — දේශීය දත්ත පෙන්වයි.', ' — showing bundled data.', ' — உள்ளமைக்கப்பட்ட தரவு காட்டப்படுகிறது.'),
   seettuwaBtn: (lang: Lang) =>
     tx(lang, 'නැකැත් සීට්ටුවට යන්න...', 'Go to full nakath list...', 'முழு நேர அட்டவணைக்குச் செல்ல...'),
   /** Heading above the scrollable list (default “සීට්ටුව” view after a live window ends). */
