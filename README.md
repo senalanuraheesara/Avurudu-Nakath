@@ -3,28 +3,26 @@
 [![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?style=flat&logo=expo)](https://expo.dev/)
 [![React Native](https://img.shields.io/badge/React%20Native-0.81-61DAFB?style=flat&logo=react)](https://reactnative.dev/)
 
-**Avurudu Nakath** is a cross-platform mobile app for **Sinhala & Hindu New Year** auspicious times (**nakath**) for **2026**. All times use **Asia/Colombo** (UTC+05:30).
+Mobile app for **Sinhala & Hindu New Year** auspicious times (**nakath**) for **2026**.
 
-The app is **fully offline for the schedule**: nakath data is plain TypeScript/JSON in [`mobile/src/data/nakath2026.ts`](mobile/src/data/nakath2026.ts). This project does **not** use **MongoDB**, **SQL**, or any other **server database**. There is **no backend**, **no API**, and **no `.env` required** for the app to run.
+- **Timezone**: Asia/Colombo (UTC+05:30)
+- **Offline-first**: the nakath schedule is bundled in the app (no backend / no API)
+- **Languages**: Sinhala, English, Tamil
 
-| | |
-|---|---|
-| **GitHub** | [senalanuraheesara/Avurudu-Nakath](https://github.com/senalanuraheesara/Avurudu-Nakath) |
-| **Expo slug** | `avurudu-nakath` |
-| **Code** | `mobile/` |
-| **Data** | In-app only — **no MongoDB**, no remote DB |
+**Repository**: `https://github.com/senalanuraheesara/Avurudu-Nakath`  
+**Expo project**: `avurudu-nakath`  
+**Android applicationId**: `com.avurudu.nakath` (see `mobile/app.json`)
 
 ---
 
 ## Table of contents
 
 - [Features](#features)
-- [Data storage (no database server)](#data-storage-no-database-server)
-- [Tech stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Getting started](#getting-started)
+- [Data (no backend, no database server)](#data-no-backend-no-database-server)
+- [Requirements](#requirements)
+- [Run locally](#run-locally)
+- [Build Android APK (sideload)](#build-android-apk-sideload)
 - [Release builds](#release-builds)
-- [Android APK build](#android-apk-build)
 - [Project structure](#project-structure)
 - [Scripts](#scripts)
 - [Contributing](#contributing)
@@ -34,47 +32,34 @@ The app is **fully offline for the schedule**: nakath data is plain TypeScript/J
 
 ## Features
 
-| Area | What you get |
-|------|----------------|
-| **Almanac** | Full 2026 nakath list bundled in the app |
-| **Hero** | Large “active” nakath view with themed artwork and motion |
-| **Countdown** | Timer to the next upcoming nakath |
-| **සීට්ටුව** | Full scrollable list; completed items drop off after a short grace period |
-| **Languages** | **සිංහල**, **English**, **தமிழ்** |
-| **Notifications** | Local reminders for upcoming nakath times (where the OS allows) |
-| **Compass** | Bearing helper for rituals that specify a direction |
-| **Mute** | Per–nakath mute for notification reminders |
+- **Active nakath hero** with themed artwork and motion
+- **Countdown** to the next upcoming nakath
+- **Full list (සීට්ටුව)** with “past” state and per‑nakath mute for reminders
+- **Local notifications** (where supported by the OS)
+- **Compass** for direction-facing rituals
+- **Sinhala / English / Tamil**
 
 ---
 
-## Data storage (no database server)
+## Data (no backend, no database server)
 
-- All nakath times and copy ship **inside the app** (see `mobile/src/data/`).
-- **MongoDB is not used** and there is **no** database connection string or seed step.
-- Optional **AsyncStorage** on the device may store only small preferences (e.g. muted rituals), not a MongoDB file or cloud DB.
-
----
-
-## Tech stack
-
-| Layer | Details |
-|-------|---------|
-| Framework | [Expo](https://expo.dev/) SDK ~54, [React Native](https://reactnative.dev/) 0.81 |
-| UI | React 19, TypeScript |
-| Native bits | `expo-notifications`, `expo-location`, `expo-sensors`, `react-native-svg`, etc. |
-| Release builds | [EAS Build](https://docs.expo.dev/build/introduction/) — see [`mobile/eas.json`](mobile/eas.json) (`apk` profile for installable APKs) |
+- Source of truth: `mobile/src/data/nakath2026.ts`
+- No MongoDB / SQL / server DB and no connection strings
+- On-device storage (AsyncStorage) is used only for small preferences (e.g. muted nakaths)
 
 ---
 
-## Prerequisites
+## Requirements
 
-- [Node.js](https://nodejs.org/) **LTS** (20.x or 22.x)
+- **Node.js** LTS (20.x or 22.x)
 - **npm** (bundled with Node)
-- For on-device dev: [Expo Go](https://expo.dev/go) on a phone, or Android Studio / Xcode simulators
+- One of:
+  - **Expo Go** on a phone, or
+  - Android Studio emulator / iOS simulator (macOS + Xcode)
 
 ---
 
-## Getting started
+## Run locally
 
 ```bash
 git clone https://github.com/senalanuraheesara/Avurudu-Nakath.git
@@ -85,28 +70,15 @@ npm start
 
 Then:
 
-- Press **`a`** — Android emulator  
-- Press **`i`** — iOS simulator (macOS + Xcode)  
-- Scan the QR code — **Expo Go** on a physical device  
-
-You do **not** need MongoDB, a database server, an API URL, or any `.env` file to run or develop the app.
+- Press `a` for Android
+- Press `i` for iOS (macOS only)
+- Or scan the QR with Expo Go
 
 ---
 
-## Release builds
+## Build Android APK (sideload)
 
-- **Expo project**: `avurudu-nakath`
-- **Latest Android build link (EAS Build)**: `https://expo.dev/accounts/senalanuraheesara/projects/avurudu-nakath/builds/e2d9d96d-f5ab-41b6-aba8-6cd1a11baad7`
-
-If you change icons, app config (`app.json`), native plugins, or dependencies, you must create a **new build** to see those changes in the installed APK.
-
----
-
-## Android APK build
-
-To build an **`.apk`** you can share or sideload (outside Google Play):
-
-From the project root:
+This creates an installable **`.apk`** file you can share directly (no Play Store).
 
 ```bash
 cd mobile
@@ -116,9 +88,17 @@ eas login
 eas build --platform android --profile apk
 ```
 
-When the build finishes, download the APK from the build page in the Expo dashboard.
+Download the APK from the Expo build page when the build finishes.
 
-The Android application id is **`com.avurudu.nakath`** (see [`mobile/app.json`](mobile/app.json)). End users may need to allow installation from **unknown sources** for how you distribute the file.
+If you changed **icons**, `app.json`, native plugins, or dependencies, you **must** create a new build to see those changes on a device.
+
+---
+
+## Release builds
+
+- Latest Android build (EAS): `https://expo.dev/accounts/senalanuraheesara/projects/avurudu-nakath/builds/e2d9d96d-f5ab-41b6-aba8-6cd1a11baad7`
+
+Note: Android launchers can cache icons. If the icon doesn’t change after installing a new APK, uninstall the old app once and install again.
 
 ---
 
