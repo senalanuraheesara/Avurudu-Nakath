@@ -1,5 +1,62 @@
-mobile/node_modules/
-server/node_modules/
+# --- Dependencies ---
+node_modules/
+
+# --- Environment & secrets ---
 .env
-.env.local
+.env.*
+!.env.example
+!**/.env.example
+
+# --- Logs ---
+logs/
 *.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+pnpm-debug.*
+lerna-debug.*
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- IDEs & editors ---
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Expo / React Native (mobile/) ---
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/expo-env.d.ts
+.metro-health-check*
+
+# Generated native projects (expo prebuild / local builds)
+mobile/android/
+mobile/ios/
+mobile/.kotlin/
+
+# --- Keys & signing (never commit) ---
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+*.orig.*
+
+# --- TypeScript ---
+*.tsbuildinfo
+
+# --- Test & coverage ---
+coverage/
+.nyc_output/
+
+# --- Misc ---
+.tmp/
+temp/
+.cache/
