@@ -23,6 +23,7 @@ The app is **fully offline for the schedule**: nakath data is plain TypeScript/J
 - [Tech stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Getting started](#getting-started)
+- [Release builds](#release-builds)
 - [Android APK build](#android-apk-build)
 - [Project structure](#project-structure)
 - [Scripts](#scripts)
@@ -92,20 +93,30 @@ You do **not** need MongoDB, a database server, an API URL, or any `.env` file t
 
 ---
 
+## Release builds
+
+- **Expo project**: `avurudu-nakath`
+- **Latest Android build link (EAS Build)**: `https://expo.dev/accounts/senalanuraheesara/projects/avurudu-nakath/builds/e2d9d96d-f5ab-41b6-aba8-6cd1a11baad7`
+
+If you change icons, app config (`app.json`), native plugins, or dependencies, you must create a **new build** to see those changes in the installed APK.
+
+---
+
 ## Android APK build
 
 To build an **`.apk`** you can share or sideload (outside Google Play):
 
-1. Install the Expo CLI for builds: `npm install -g eas-cli`
-2. Log in: `eas login`
-3. From `mobile/`:
+From the project root:
 
 ```bash
 cd mobile
+npm install
+npm install -g eas-cli
+eas login
 eas build --platform android --profile apk
 ```
 
-4. When the build finishes, download the artifact from the [Expo dashboard](https://expo.dev/).
+When the build finishes, download the APK from the build page in the Expo dashboard.
 
 The Android application id is **`com.avurudu.nakath`** (see [`mobile/app.json`](mobile/app.json)). End users may need to allow installation from **unknown sources** for how you distribute the file.
 
